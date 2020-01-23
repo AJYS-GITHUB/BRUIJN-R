@@ -113,21 +113,25 @@ crearlistas<-function(nodos)
   return(lista)
 }
 
-dividir<-function(fuente,destino,traslape)
+dividir<-function(fuente,destino,traslape,tamano)
 {
   completo<-""
   for (linea in readLines(con<-file(fuente))) {
     completo<-paste(completo,linea,sep = "")
   }
   inicio<-1
-  tamaño<-40
-  fin<-inicio + tamaño-1
+  fin<-inicio + tamano-1
   lineas<-c()
   while (fin<=nchar(completo)) {
     token<-substr(completo,inicio,fin)
     lineas<-c(lineas,token)
-    inicio<-(inicio+tamaño)-traslape
-    fin<-inicio+tamaño-1
+    inicio<-(inicio+tamano)-traslape
+    fin<-inicio+tamano-1
+  }
+  if(inicio<nchar(completo) && fin>nchar(completo))
+  {
+    token<-substr(completo,inicio,nchar(completo))
+    lineas<-c(lineas,token)
   }
   print(lineas)
   writeLines(lineas,con = file(destino),sep = "\n")
