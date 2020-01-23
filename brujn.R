@@ -2,6 +2,7 @@ brujn <- function(secuencias, traslape)
 {
     
   nodos <- c()
+  print('Generando nodos del grafo...')
   for (stri in secuencias) {
     l <- nchar(stri)
     s1<- substr(stri,1,traslape)
@@ -15,6 +16,7 @@ brujn <- function(secuencias, traslape)
   kmers<-crearlistas(nodos)
   colnames(adyacencia)<-nodos
   rownames(adyacencia)<-nodos
+  print('Generando aristas del grafo...')
   for (stri in secuencias) {
     l <- nchar(stri)
     s1 <- substr(stri,1,traslape)
@@ -22,9 +24,7 @@ brujn <- function(secuencias, traslape)
     adyacencia[s1,s2]<-adyacencia[s1,s2]+1
     kmers[[s1]][[s2]]<-c(kmers[[s1]][[s2]],stri)
   }
-  print(adyacencia)
-  print(kmers)
-  
+  print('Buscando camino euleriano...')
   for (inicio in nodos) {
     res<-buscarcamino(adyacencia,inicio,nodos,inicio)
     if(res[1]=="TRUE")
@@ -39,7 +39,7 @@ brujn <- function(secuencias, traslape)
         sres<-paste(sres,substr(kmer,nchar(primer)+1,nchar(kmer)),sep="")
         primer<-sig
       }
-      
+      print('Exito')
       return(sres)
     }
       
