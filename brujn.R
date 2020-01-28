@@ -1,10 +1,11 @@
 brujn <- function(secuencias, traslape)
 {
-    
+  #Primero crearemos un vector con todos los nodos que contendra el bgrafo de bruijn
   nodos <- c()
   print('Generando nodos del grafo...')
   for (stri in secuencias) {
     l <- nchar(stri)
+    #El vector de nodos tendra los prefijos y sufijos de los kmeros
     s1<- substr(stri,1,traslape)
     s2<- substr(stri,l-traslape+1,l)
     nodos <- union(nodos,s1)
@@ -12,7 +13,9 @@ brujn <- function(secuencias, traslape)
     s1 <- ""
     s2 <- ""
   }
+  #Las aristas del grafo estaran representadas mediante una matriz de adyacencia
   adyacencia <- matrix(0,nrow=length(nodos),ncol = length(nodos))
+  #Ademas Los cameros en las aristas estaran representados mediante una lista de listas
   kmers<-crearlistas(nodos)
   colnames(adyacencia)<-nodos
   rownames(adyacencia)<-nodos
@@ -24,9 +27,10 @@ brujn <- function(secuencias, traslape)
     adyacencia[s1,s2]<-adyacencia[s1,s2]+1
     kmers[[s1]][[s2]]<-c(kmers[[s1]][[s2]],stri)
   }
+  #print(adyacencia)
   print('Buscando camino euleriano...')
   for (inicio in nodos) {
-    res<-buscarcamino(adyacencia,inicio,nodos,inicio)
+    res<-euleriano(adyacencia,inicio,nodos,inicio)
     if(res[1]=="TRUE")
     {
       print(res[-1])
@@ -65,7 +69,7 @@ siguientepaso<-function(m,st,nodos)
   return(NA)
 }
 
-buscarcamino<-function(m,inicio,nodos,camino)
+euleriano<-function(m,inicio,nodos,camino)
 {
   if(!haycamino(m))
   {
@@ -109,7 +113,6 @@ crearlistas<-function(nodos)
     names(lista[[nod]])<-nodos
     lista[[nod]][nodos]<-""
   }
-  print(lista)
   return(lista)
 }
 
@@ -133,7 +136,6 @@ dividir<-function(fuente,destino,traslape,tamano)
     token<-substr(completo,inicio,nchar(completo))
     lineas<-c(lineas,token)
   }
-  print(lineas)
   writeLines(lineas,con = file(destino),sep = "\n")
 }
 
